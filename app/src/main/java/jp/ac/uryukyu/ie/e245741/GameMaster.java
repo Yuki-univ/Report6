@@ -1,79 +1,83 @@
 package jp.ac.uryukyu.ie.e245741;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class GameMaster {
-    //以下はプレイヤーにカードを配る処理ができてるかを確認するためのコード
-    /*public static void main(String[] args) {
-        // デッキを作成してシャッフル
-        Deck deck = new Deck();
-        deck.shuffle();
+    private String firstPlayer;
+    private Scanner scanner = new Scanner(System.in);
 
-        // プレイヤーを作成
-        Player player1 = new Player("Player 1");
-        Player player2 = new Player("Player 2");
+    public void decideFirstPlayer(Player player, String suit, int number){
+        for (Card card : player.getHand()) {
+            if (card.getSuit().equals(suit) && card.getNumber() == number) {
+                this.firstPlayer = player.getName();
+                System.out.println("先手は" + player.getName() + "です");
+                break;
+            }
+            
+        }
 
-        // 各プレイヤーにカードを交互に配る
-        while (deck.getCards().size() > 0) {
-            player1.receiveCards(deck.dealCards(1));
-            if (deck.getCards().size() > 0) {
-                player2.receiveCards(deck.dealCards(1));
+    }
+
+    // プレイヤーが持っている全ての7を場に出させる
+    public void placeAllSevens(List<Player> players, Table table){
+        for (Player player : players) {
+            
+            List<Card> cards_ = new ArrayList<>(player.getHand()); 
+            for (Card card : cards_) {
+                if (card.getNumber() == 7) { // 数字が7のカードをチェック
+                    player.playCard(card.getSuit(), card.getNumber(), table);
+                    
+                    
+                }
+            }
+
+            
+        }
+    }
+     
+    /**
+     * プレイヤーに場に出せるカードを選んでもらい、出すためのメソッド
+     * プレイヤーの出せるカードを出力して、プレイヤーの出したいカードの入力を受け取り場に出す
+     * 
+     * @param player
+     * @param table
+     */
+    public void playTurn(Player player, Table table) {
+        // 出せるカードを取得
+        List<Card> playableCards = player.canPlay(table);
+
+        if (playableCards.isEmpty()) {
+            System.out.println(player.getName() + " は出せるカードがありません");
+            return;
+        }
+
+        // 出せるカードを表示
+        System.out.println(player.getName() + "は以下のカードを出せます:");
+        for (int i = 0; i < playableCards.size(); i++) {
+            System.out.println((i + 1) + ": " + playableCards.get(i));
+        }
+
+        // ユーザーが選択するまで繰り返す
+        Card selectedCard = null;
+        while (selectedCard == null) {
+            System.out.print("出すカードを選んでください (1-" + playableCards.size() + "): ");
+            try {
+                int choice = Integer.parseInt(scanner.nextLine());
+                if (choice >= 1 && choice <= playableCards.size()) {
+                    selectedCard = playableCards.get(choice - 1);
+                } else {
+                    System.out.println("無効な番号です。有効なものを選んでください");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("無効です。もう一で選んでください");
             }
         }
 
-        // 各プレイヤーの手札を表示
-        System.out.println(player1.getHand());
-        System.out.println(player2.getHand());
-    } */
-
-    //以下はcanPlay()を試すためのコード
-    /*public static void main(String[] args) {
-    Deck deck = new Deck();
-    deck.shuffle();
-
-    // 場の準備
-    Table table = new Table();
-    table.placeCard("Spades", 7);
-    table.placeCard("Hearts", 5);
-
-    // プレイヤーを作成
-    Player player1 = new Player("Player 1");
-    Player player2 = new Player("Player 2");
-
-    // 各プレイヤーにカードを交互に配る
-    while (deck.getCards().size() > 0) {
-        player1.receiveCards(deck.dealCards(1));
-        if (deck.getCards().size() > 0) {
-            player2.receiveCards(deck.dealCards(1));
-        }
+        // 選択されたカードを場に出し、手札から削除
+        player.playCard(selectedCard.getSuit(), selectedCard.getNumber(),table);
+      
     }
-    // プレイヤーが出せるカードを確認
-    List<Card> placeableCards = player1.canPlay(table);
-
-    // 出せるカードを表示
-    System.out.println("Placeable cards: " + placeableCards);
-}*/
-
-/*以下はplayCardを試すためのコード
-public static void main(String[] args) {
-    Deck deck = new Deck();
-        deck.shuffle();
-        Table table = new Table();
-
-        // プレイヤーを作成し、カードを配る
-        Player player = new Player("Alice");
-        player.receiveCards(deck.dealCards(52));
-
-        // 現在の手札を表示
-        //System.out.println(player);
-
-        // カードを場に出す
-        player.playCard("Spades", 7, table);
-
-        // 現在の場の状態と手札を表示
-        System.out.println("Table: " + table.getCardsBySuit("Spades"));
-        //System.out.println(player);
-}
-}*/
 }
 
