@@ -15,15 +15,12 @@ public class Table {
     public Table() {
         this.table = new HashMap<>(); 
     }
-
-    
-    //カードを場の状況に加えるためのメソッド
     
     /**
      * カードを場に加えるためのメソッド。
      * 引数で受け取ったカードをtableフィールドに追加し、数字順にソートする。
-     * @param suit
-     * @param number
+     * @param suit　カードのスート
+     * @param number　カードの番号
      */
     public void placeCard(String suit, int number) {
         // スートに対応するカードリストを取得、なければ新しいリストを作成
@@ -33,14 +30,9 @@ public class Table {
             table.put(suit, cards); // 初めてのスートの場合、table に登録
         }
 
-        // カードの重複をチェック
         Card newCard = new Card(suit, number);
-        //if (cards.contains(newCard)) {      //カードを配るシステム上重複することがないと思うので一旦この部分は省略
-            //System.out.println("Card already placed: " + suit + " " + number);
-        //} else {
-            cards.add(newCard); // 新しいカードを追加
-            cards.sort(Comparator.comparingInt(Card::getNumber)); // 数字順にソート
-        
+        cards.add(newCard); // 新しいカードを追加
+        cards.sort(Comparator.comparingInt(Card::getNumber)); // 数字順にソート
     }
 
     /**
@@ -53,20 +45,19 @@ public class Table {
 
     /**
      * 引数として受け取ったスートの、カード一覧（List）を返すメソッド
-     * @param suit
-     * @return　List<Card>
+     * @param suit　カードのスート
+     * @return　カードのリスト
      */
     public List<Card> getCardsBySuit(String suit) {
         return table.getOrDefault(suit, new ArrayList<>()); 
     }
 
+    /**
+     * テーブルに出されているカードをスートごとに並べて表示する
+     */
     public void displayTable() {
-        /*if (table.isEmpty()) {
-            System.out.println("No cards on the table yet.");
-            return;
-        }*/ //はじめに全ての７を出させるのでこのコードはいらない
-
-        System.out.println("Current cards on the table:");
+        System.out.println("-----------------------------");
+        System.out.println("テーブルに出されているカード:");
         for (String suit : table.keySet()) {
             System.out.print(suit + ": ");
             List<Card> cards = table.get(suit);
@@ -75,6 +66,7 @@ public class Table {
             }
             System.out.println();
         }
+        System.out.println("-----------------------------");
     }
     
 }

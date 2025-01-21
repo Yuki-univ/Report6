@@ -2,37 +2,59 @@ package jp.ac.uryukyu.ie.e245741;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * プレイヤーの情報を保持したり、プレイヤーの手札から出せるカードを判断したり、場に出すためのクラス
+ */
 public class Player {
     private String name;
     private List<Card> hand;
 
-    //コンストラクタ
+    /**
+     * コンストラクタ。名前を代入して、ArrayListを準備する。
+     * @param name　プレイヤーの名前
+     */
     public Player(String name) {
         this.name = name;
         hand = new ArrayList<>();
     }
-    //カードを受け取る
+
+    /**
+     * カードを手札に加えるためのメソッド。
+     * @param cards　手札に加えたいカード
+     */
     public void receiveCards(List<Card> cards) {
         hand.addAll(cards);
     }
-    //handのゲッター
+    
+    /**
+     * handのゲッター
+     * @return hand
+     */
     public List<Card> getHand() {
         return hand;
     }
-    //nameのゲッター
+    
+    /**
+     * nameのゲッター
+     * @return name
+     */
     public String getName() {
         return name;
     }
 
-    @Override
-    public String toString() {
-        return name + "'s hand: " + hand;
+    /**
+     * 手札が空かどうかを判定する
+     * @return true：手札が空のとき
+     *         false：手札が空でないとき
+     */
+    public boolean hasNoCards() {
+        return hand.isEmpty();
     }
     
     /**
      * 場に出てるカードとプレイヤーの手札を比べて、場に出せる手札を返す。
-     * @param table
-     * @return　List<Card> placeableCards
+     * @param table　テーブルに出ているカードの情報
+     * @return　placeableCards　場に出せるカードのリスト
      */
     public List<Card> canPlay(Table table) {
         List<Card> placeableCards = new ArrayList<>();
@@ -58,13 +80,21 @@ public class Player {
     
         return placeableCards;
     }
+    
+    /**
+     * プレイヤーの手札を見やすい書式で返す
+     */
+    @Override
+    public String toString() {
+        return name + "'s hand: " + hand;
+    }
 
     /**
      * 場にカードを出すためのメソッド。
      * 引数として受け取ったカードをプレイヤーが持っていれば、手札から削除し、Tableに追加する。
-     * @param suit
-     * @param number
-     * @param table
+     * @param suit　カードのスート
+     * @param number　カードの番号
+     * @param table　　テーブルの情報
      */
     public void playCard(String suit, int number, Table table) {
         // プレイヤーの手札から引数のカードを探す
